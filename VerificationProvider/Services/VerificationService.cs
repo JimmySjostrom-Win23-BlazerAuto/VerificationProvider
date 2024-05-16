@@ -66,6 +66,10 @@ public class VerificationService(ILogger<VerificationService> logger, IServicePr
 		{
 			var rnd = new Random();
 			var code = rnd.Next(100000, 999999);
+			Console.WriteLine(code);
+			_logger.LogError($"SUCCESS : VerificationService.GenerateCode :: {code}");
+
+			return code.ToString();
 		}
 		catch (Exception ex)
 		{
@@ -99,7 +103,7 @@ public class VerificationService(ILogger<VerificationService> logger, IServicePr
 								</div>
 								<div style='background-color: ¤f4f4f4; padding: 1rem 2rem;'>
 									<p>Dear user,</p>
-									<p>We received a requesdt to sign in to your account using e-mail {verificationRequest.Email}. Please verify your account using this verification code:</p>
+									<p>We received a request to sign in to your account using e-mail {verificationRequest.Email}. Please verify your account using this verification code:</p>
 									<p class='code' style='font-weight: 700; text-align: center; font-size: 48px; letter-spacing: 8px;'>
 										{code}
 									</p>
@@ -135,6 +139,7 @@ public class VerificationService(ILogger<VerificationService> logger, IServicePr
 			var payload = JsonConvert.SerializeObject(emailRequest);
 			if (!string.IsNullOrEmpty(payload))
 			{
+				_logger.LogError($"SUCCESS : GenerateVerificationCode.GenerateServiceBusEmailRequest :: {payload}");
 				return payload;
 			}
 
