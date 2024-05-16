@@ -16,21 +16,35 @@ public class GenerateVerificationCode(ILogger<GenerateVerificationCode> logger, 
 	{
 		try
 		{
+			_logger.LogError($"SUCCESS : GenerateVerificationCode :: {message}");
+
 			var verificationRequest = _verificationService.UnpackVerificationRequest(message);
+			
 			if (verificationRequest != null)
 			{
+				_logger.LogError($"SUCCESS : VerificationRequest :: {verificationRequest}");
+
 				var code = _verificationService.GenerateCode();
 				if (!string.IsNullOrEmpty(code))
 				{
+					_logger.LogError($"SUCCESS : GenerateCode :: {code}");
+
 					var result = await _verificationService.SaveVerificationRequest(verificationRequest, code);
 					if (result)
 					{
+						_logger.LogError($"SUCCESS : SaveVerificationRequest :: {result}");
+
 						var emailRequest = _verificationService.GenerateEmailRequest(verificationRequest, code);
 						if (emailRequest != null)
 						{
+							_logger.LogError($"SUCCESS : EmailRequest :: {emailRequest}");
+
 							var payload = _verificationService.GenerateServiceBusEmailRequest(emailRequest);
 							if (!string.IsNullOrEmpty(payload))
 							{
+								_logger.LogError($"SUCCESS : GenerateServiceBusEmailRequest :: {message}");
+								_logger.LogError($"SUCCESS : GenerateServiceBusEmailRequest :: {payload}");
+
 								await messageActions.CompleteMessageAsync(message);
 								return payload;
 							}
